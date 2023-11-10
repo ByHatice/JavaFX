@@ -12,22 +12,24 @@ public class BotMove {
         this.model = model;
         this.buttonList = model.getButtonList();
     }
-    public void makeBotMove() {
+    public boolean makeBotMove() {
         if (model.isGameStarted()) {
-            Button buttonToClick = findBlockingMove();
-            if (buttonToClick == null) {
-                buttonToClick = findWinningMove();
-                model.setPlayerTurn(true);
-            }
-            if (buttonToClick == null) {
-                buttonToClick = findRandomMove();
-                model.setPlayerTurn(true);
-            }
-
-            if (buttonToClick != null) {
-                buttonToClick.setText("O");
-                model.setPlayerTurn(true);
-            }
+            botStrategy(); // Anropa botStrategy för att bestämma botens drag.
+            model.playerTurn(true); // Byt tur till spelaren.
+            return true; // Returnera true om draget utfördes.
+        }
+        return false; // Returnera false om boten inte kan göra ett drag.
+    }
+    public void botStrategy() {
+        Button buttonToClick = findBlockingMove();
+        if (buttonToClick == null) {
+            buttonToClick = findWinningMove();
+        }
+        if (buttonToClick == null) {
+            buttonToClick = findRandomMove();
+        }
+        if (buttonToClick != null) {
+            buttonToClick.setText("O"); // Utför botens drag.
         }
     }
     private Button findBlockingMove() {

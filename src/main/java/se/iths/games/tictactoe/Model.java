@@ -7,55 +7,53 @@ import javafx.scene.control.Button;
 
 public class Model {
     private ObservableList<Button> buttonList = FXCollections.observableArrayList();
-    private boolean gameStarted = false;
-    private boolean isPlayerTurn = true;
-    public void startOrResetGame () {
-        gameStarted = !gameStarted;
+
+    public boolean gameStarted;
+    public boolean isPlayerTurn;
+
+    public void startGame() {
+        gameStarted = true;
         isPlayerTurn = true;
         resetButtons();
     }
 
-    public void resetButtons() {
-        for (Button button : buttonList) {
-            button.setText(""); // Återställ knapparna till tomma
-        }
+    public void stopGame() {
+        gameStarted = false;
+        isPlayerTurn = false;
     }
 
+    public void resetButtons() {
+        for (Button button : buttonList) {
+            button.setText("");
+        }
+    }
     public boolean isGameStarted() {
         return gameStarted;
-    }
-    public void toggleGameStarted() {
-        gameStarted = !gameStarted;
     }
 
     public ObservableList<Button> getButtonList() {
         return buttonList;
     }
+
     public void addButton(Button button) {
         buttonList.add(button);
     }
+
     public boolean isValidMove(Button button) {
         return button.getText().isEmpty();
     }
-    public void setPlayerTurn(boolean isPlayerTurn) {
+
+    public void playerTurn(boolean isPlayerTurn) {
         this.isPlayerTurn = isPlayerTurn;
     }
+
     public boolean makeMove(Button button) {
         if (isGameStarted() && isValidMove(button) && isPlayerTurn) {
-            button.setText("X"); // Spelarens drag
-            isPlayerTurn = false; // Byt tur till datorn
+            button.setText("X");
+            isPlayerTurn = false;
             return true;
         }
         return false;
-    }
-
-    public boolean isGameFinished() {
-        for (Button button : getButtonList()) {
-            if (button.getText().isEmpty()) {
-                return false; // Det finns fortfarande tomma knappar kvar, spelet är inte över.
-            }
-        }
-        return true; // Alla knappar är fyllda, spelet är över.
     }
 
     public String determineWinner() {
@@ -77,16 +75,25 @@ public class Model {
 
             if (a.equals(b) && b.equals(c)) {
                 if (a.equals("X")) {
-                    return "Player";
+                    return "X";
                 } else if (a.equals("O")) {
-                    return "Bot";
+                    return "O";
                 }
             }
         }
-
-        // Om ingen vinnare hittades
         return "Draw";
     }
+    public boolean isGameFinished() {
+        if (determineWinner().equals("X"))
+            return true;
+        if (determineWinner().equals("O"))
+            return true;
+        for (Button button : getButtonList()) {
+            if (button.getText().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+
+    }
 }
-
-

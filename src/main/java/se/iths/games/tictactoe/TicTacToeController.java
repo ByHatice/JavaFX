@@ -8,12 +8,12 @@ import javafx.scene.input.MouseEvent;
 
 public class TicTacToeController {
 
-   // private boolean gameStarted = false;
-
+    public Button startGame;
+    public Button stopResetGame;
     public Label headline;
     public Label playerScore;
     public Label botScore;
-    public Button startResetGame;
+
 
     private int playerWins = 0;
     private int botWins = 0;
@@ -29,16 +29,13 @@ public class TicTacToeController {
     public Button button8;
     public Button button9;
 
-    private final Model model = new Model();
-    public Model getModel (){
-        return model;
-    }
-
-    private final BotMove botMove = new BotMove(model); // Skapa en instans av BotMove
+    private Model model = new Model();
+    private BotMove botMove = new BotMove(model);
 
     public void initialize (){
-        startResetGame.setOnAction(this::onStartButtonClick);
-        //add buttons to a list of buttons
+        startGame.setOnAction(this::onStartButtonClick);
+        stopResetGame.setOnAction(this::onStopButtonClick);
+
         model.addButton(button1);
         model.addButton(button2);
         model.addButton(button3);
@@ -52,53 +49,69 @@ public class TicTacToeController {
     @FXML
     protected void onStartButtonClick(ActionEvent actionEvent) {
         Runnable playStatus = () -> {
-            model.toggleGameStarted ();
-            startResetGame.setText(model.isGameStarted() ? "Reset Game" : "Start New Game");
+            model.startGame ();
+            headline.setText("Tic-Tac-Toe");
+            model.resetButtons();
         };
         playStatus.run();
     }
-    @FXML
+    protected void onStopButtonClick(ActionEvent actionEvent) {
+        Runnable stopStatus = () -> {
+            model.stopGame();
+            playerWins = 0;
+            botWins = 0;
+            playerScore.setText("0");
+            botScore.setText("0");
+            headline.setText("Tic-Tac-Toe");
+            model.resetButtons();
+        };
+        stopStatus.run();
+    }
+
+
     public void onButtonClicked(MouseEvent mouseEvent) {
         Button clickedButton = (Button) mouseEvent.getSource();
 
         if (model.makeMove(clickedButton)) {
-            // Draget var giltigt och X eller O har satts i knappen beroende på spelarens eller datorns tur.
 
+             clickedButton.setText("X");
+//clicked button vilken spelare?
             if (model.isGameFinished()) {
-                // Spelet är över, kontrollera resultatet här.
                 String winner = model.determineWinner();
                 if (winner.equals("X")) {
                     playerWins++;
-                } else if (winner.equals("O")) {
-                    botWins++;
+                    headline.setText("X WINS!");
                 }
-
-                // Uppdatera poängen
+                if (winner.equals("O")) {
+                    botWins++;
+                    headline.setText("O WINS!");
+                } else if (winner.equals("Draw")){
+                    headline.setText("It's a draw!");
+                }
                 playerScore.setText(String.valueOf(playerWins));
                 botScore.setText(String.valueOf(botWins));
+                model.stopGame();
 
-                // Återställ spelet
-                model.resetButtons();
             } else {
-                // Det är datorns tur att göra ett drag.
-                botMove.makeBotMove(); // Datorn gör sitt drag.
+                botMove.makeBotMove();
 
                 if (model.isGameFinished()) {
-                    // Spelet är över igen, kontrollera resultatet här.
                     String winner = model.determineWinner();
                     if (winner.equals("X")) {
                         playerWins++;
-                    } else if (winner.equals("O")) {
-                        botWins++;
+
+                        headline.setText("X WINS!");
                     }
+                    if (winner.equals("O")) {
+                        botWins++;
 
-                    // Uppdatera poängen
+                        headline.setText("O WINS!");
+                    } else if (winner.equals("Draw")){
+                        headline.setText("It's a draw!");
+                    }
                     playerScore.setText(String.valueOf(playerWins));
-                    botScore.setText("Bot: " + botWins);
-
-                    // Återställ spelet
-                    model.startOrResetGame();
-                    model.resetButtons();
+                    botScore.setText(String.valueOf(botWins));
+                    model.stopGame();
                 }
             }
         }
