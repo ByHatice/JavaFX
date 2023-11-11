@@ -1,10 +1,13 @@
 package se.iths.games.tictactoe;
 
+import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+
 
 public class TicTacToeController {
 
@@ -14,10 +17,9 @@ public class TicTacToeController {
     public Label playerScore;
     public Label botScore;
 
-
     private int playerWins = 0;
     private int botWins = 0;
-
+    ObservableList<StringProperty> buttonList;
 
     public Button button1;
     public Button button2;
@@ -32,19 +34,21 @@ public class TicTacToeController {
     private Model model = new Model();
     private BotMove botMove = new BotMove(model);
 
+
     public void initialize (){
         startGame.setOnAction(this::onStartButtonClick);
         stopResetGame.setOnAction(this::onStopButtonClick);
+        buttonList = model.getButtonList();
 
-        model.addButton(button1);
-        model.addButton(button2);
-        model.addButton(button3);
-        model.addButton(button4);
-        model.addButton(button5);
-        model.addButton(button6);
-        model.addButton(button7);
-        model.addButton(button8);
-        model.addButton(button9);
+        buttonList.add(button1.textProperty());
+        buttonList.add(button2.textProperty());
+        buttonList.add(button3.textProperty());
+        buttonList.add(button4.textProperty());
+        buttonList.add(button5.textProperty());
+        buttonList.add(button6.textProperty());
+        buttonList.add(button7.textProperty());
+        buttonList.add(button8.textProperty());
+        buttonList.add(button9.textProperty());
     }
     @FXML
     protected void onStartButtonClick(ActionEvent actionEvent) {
@@ -67,53 +71,39 @@ public class TicTacToeController {
         };
         stopStatus.run();
     }
-
-
     public void onButtonClicked(MouseEvent mouseEvent) {
         Button clickedButton = (Button) mouseEvent.getSource();
 
-        if (model.makeMove(clickedButton)) {
+        if (model.makeMove(clickedButton.textProperty())) {
+        clickedButton.setText("X");
 
-             clickedButton.setText("X");
-//clicked button vilken spelare?
+        if (model.isGameFinished()) {
+            handleGameResult();
+        }
+        else {
+            botMove.makeBotMove();
             if (model.isGameFinished()) {
-                String winner = model.determineWinner();
-                if (winner.equals("X")) {
-                    playerWins++;
-                    headline.setText("X WINS!");
-                }
-                if (winner.equals("O")) {
-                    botWins++;
-                    headline.setText("O WINS!");
-                } else if (winner.equals("Draw")){
-                    headline.setText("It's a draw!");
-                }
-                playerScore.setText(String.valueOf(playerWins));
-                botScore.setText(String.valueOf(botWins));
-                model.stopGame();
-
-            } else {
-                botMove.makeBotMove();
-
-                if (model.isGameFinished()) {
-                    String winner = model.determineWinner();
-                    if (winner.equals("X")) {
-                        playerWins++;
-
-                        headline.setText("X WINS!");
-                    }
-                    if (winner.equals("O")) {
-                        botWins++;
-
-                        headline.setText("O WINS!");
-                    } else if (winner.equals("Draw")){
-                        headline.setText("It's a draw!");
-                    }
-                    playerScore.setText(String.valueOf(playerWins));
-                    botScore.setText(String.valueOf(botWins));
-                    model.stopGame();
-                }
+                handleGameResult();
             }
         }
+        }
+    }
+    private void handleGameResult() {
+    String winner = model.determineWinner();
+        switch (winner) {
+            case "X" -> {
+                playerWins++;
+                headline.setText("X WINS!");
+            }
+            case "O" -> {
+                botWins++;
+                headline.setText("O WINS!");
+            }
+            case "Draw" -> headline.setText("It's a draw!");
+        }
+
+    playerScore.setText(String.valueOf(playerWins));
+    botScore.setText(String.valueOf(botWins));
+    model.stopGame();
     }
 }

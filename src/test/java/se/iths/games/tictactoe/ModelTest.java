@@ -1,26 +1,69 @@
 package se.iths.games.tictactoe;
 
-import javafx.scene.control.Button;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 class ModelTest {
 
-    Model model = new Model();
-/*
-    @Test
-    @DisplayName("Testar om knapp 4 innehåller 'X' när spelet startas och sedan återställs när spelet startas på nytt")
-    public void testStartAndStopGame() {
-        model.startGame();
-        Button button4 = model.getButtonList().get(3);
-        model.makeMove(button4);
+    private Model model;
+    private ObservableList<StringProperty> buttonList;
 
-        assertEquals("X", button4.getText());
+    @BeforeEach
+    void setUp() {
+        model = new Model();
+        buttonList = model.getButtonList();
+        buttonList.addAll(
+                new SimpleStringProperty(""), new SimpleStringProperty(""), new SimpleStringProperty(""),
+                new SimpleStringProperty(""), new SimpleStringProperty(""), new SimpleStringProperty(""),
+                new SimpleStringProperty(""), new SimpleStringProperty(""), new SimpleStringProperty("")
+        );
+    }
+    @Test
+    @DisplayName("Starting a Game)")
+    void gameStartsSuccessfully() {
+
+        model.startGame();
+
+        assertTrue(model.isGameStarted());
+        assertTrue(model.isPlayerTurn);
+    }
+    @Test
+    @DisplayName("Stopping the game)")
+    void gameStopsSuccessfully() {
+        model.startGame();
+
         model.stopGame();
 
-        model.startGame();
-        assertEquals("", button4.getText());
+        assertFalse(model.isGameStarted());
+        assertFalse(model.isPlayerTurn);
     }
-*/
+    @ParameterizedTest
+    @MethodSource("gameFinishedTestData")
+    @DisplayName("Check Winner")
+    void isGameFinishedTest(String[] buttonTexts, String expectedWinner, boolean expectedResult) {
+
+        for (int i = 0; i < 9; i++) {
+            buttonList.get(i).set(buttonTexts[i]);
+        }
+
+        if (expectedResult) {
+            assertEquals(expectedWinner, model.determineWinner());
+        }
+    }
+    static Stream<Arguments> gameFinishedTestData() {
+        return Stream.of(
+                Arguments.of(new String[]{"X", "O", "X", "O", "X", "O", "X", "O", "X"}, "X", true),  // X vinner
+                Arguments.of(new String[]{"O", "X", "O", "X", "O", "X", "O", "X", "O"}, "O", true),  // O vinner
+                Arguments.of(new String[]{"X", "O", "X", "O", "X", "X", "O", "X", "O"}, "Draw", true));  // Oavgjort
+    }
 }

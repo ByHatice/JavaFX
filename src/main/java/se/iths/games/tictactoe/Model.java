@@ -1,12 +1,11 @@
 package se.iths.games.tictactoe;
 
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
-
 
 public class Model {
-    private ObservableList<Button> buttonList = FXCollections.observableArrayList();
+   final private ObservableList<StringProperty> buttonList = FXCollections.observableArrayList();
 
     public boolean gameStarted;
     public boolean isPlayerTurn;
@@ -23,33 +22,26 @@ public class Model {
     }
 
     public void resetButtons() {
-        for (Button button : buttonList) {
-            button.setText("");
+        for (StringProperty buttonText : buttonList) {
+            buttonText.setValue("");
         }
     }
-    public boolean isGameStarted() {
+    public void playerTurn(boolean isPlayerTurn) { //används i botmove
+        this.isPlayerTurn = isPlayerTurn;}
+    public boolean isGameStarted() { //används i botmove
         return gameStarted;
     }
 
-    public ObservableList<Button> getButtonList() {
+    public ObservableList<StringProperty> getButtonList() {
         return buttonList;
     }
 
-    public void addButton(Button button) {
-        buttonList.add(button);
+    public boolean isValidMove(StringProperty button) {
+        return button.getValue().isEmpty();
     }
-
-    public boolean isValidMove(Button button) {
-        return button.getText().isEmpty();
-    }
-
-    public void playerTurn(boolean isPlayerTurn) {
-        this.isPlayerTurn = isPlayerTurn;
-    }
-
-    public boolean makeMove(Button button) {
+    public boolean makeMove(StringProperty button) {
         if (isGameStarted() && isValidMove(button) && isPlayerTurn) {
-            button.setText("X");
+            button.setValue("X");
             isPlayerTurn = false;
             return true;
         }
@@ -69,9 +61,9 @@ public class Model {
         };
 
         for (String[] combo : winningCombinations) {
-            String a = buttonList.get(Integer.parseInt(combo[0])).getText();
-            String b = buttonList.get(Integer.parseInt(combo[1])).getText();
-            String c = buttonList.get(Integer.parseInt(combo[2])).getText();
+            String a = buttonList.get(Integer.parseInt(combo[0])).getValue();
+            String b = buttonList.get(Integer.parseInt(combo[1])).getValue();
+            String c = buttonList.get(Integer.parseInt(combo[2])).getValue();
 
             if (a.equals(b) && b.equals(c)) {
                 if (a.equals("X")) {
@@ -84,16 +76,15 @@ public class Model {
         return "Draw";
     }
     public boolean isGameFinished() {
-        if (determineWinner().equals("X"))
+        String winner = determineWinner();
+        if (winner.equals("X") || winner.equals("O")) {
             return true;
-        if (determineWinner().equals("O"))
-            return true;
-        for (Button button : getButtonList()) {
-            if (button.getText().isEmpty()) {
+        }
+        for (StringProperty button : getButtonList()) {
+            if (button.get().isEmpty()) {
                 return false;
             }
         }
         return true;
-
     }
 }

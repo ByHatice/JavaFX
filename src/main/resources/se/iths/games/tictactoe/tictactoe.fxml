@@ -37,7 +37,7 @@
          <Font size="13.0" />
       </font>
    </Button>
-   <Button fx:id="stopResetGame" defaultButton="true" layoutX="115.0" layoutY="140.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="124.0" text="Stop/Reset  Game">
+   <Button fx:id="stopResetGame" defaultButton="true" layoutX="106.0" layoutY="140.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="137.0" text="Stop &amp; Reset  Game">
       <font>
          <Font size="13.0" />
       </font></Button>
