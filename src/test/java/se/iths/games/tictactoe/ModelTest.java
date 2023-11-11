@@ -29,6 +29,16 @@ class ModelTest {
         );
     }
     @Test
+    @DisplayName("Make a valid move")
+    void testIsValidMove() {
+
+        model.getButtonList().get(0).set("X");
+
+        assertFalse(model.isValidMove(model.getButtonList().get(0)));
+
+        assertTrue(model.isValidMove(model.getButtonList().get(1)));
+    }
+    @Test
     @DisplayName("Starting a Game)")
     void gameStartsSuccessfully() {
 
