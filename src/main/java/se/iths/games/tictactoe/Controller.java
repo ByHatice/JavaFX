@@ -9,7 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 
 
-public class TicTacToeController {
+public class Controller {
 
     public Button startGame;
     public Button stopResetGame;
@@ -31,8 +31,7 @@ public class TicTacToeController {
     public Button button8;
     public Button button9;
 
-    private Model model = new Model();
-    private BotMove botMove = new BotMove(model);
+    private final Model model = new Model();
 
 
     public void initialize (){
@@ -73,15 +72,14 @@ public class TicTacToeController {
     }
     public void onButtonClicked(MouseEvent mouseEvent) {
         Button clickedButton = (Button) mouseEvent.getSource();
-
         if (model.makeMove(clickedButton.textProperty())) {
-        clickedButton.setText("X");
+            clickedButton.setText("X");
 
         if (model.isGameFinished()) {
             handleGameResult();
         }
         else {
-            botMove.makeBotMove();
+            model.makeBotMove();
             if (model.isGameFinished()) {
                 handleGameResult();
             }

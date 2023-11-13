@@ -39,7 +39,7 @@ class ModelTest {
         assertTrue(model.isValidMove(model.getButtonList().get(1)));
     }
     @Test
-    @DisplayName("Starting a Game)")
+    @DisplayName("Starting a Game")
     void gameStartsSuccessfully() {
 
         model.startGame();
@@ -48,7 +48,7 @@ class ModelTest {
         assertTrue(model.isPlayerTurn);
     }
     @Test
-    @DisplayName("Stopping the game)")
+    @DisplayName("Stopping the game")
     void gameStopsSuccessfully() {
         model.startGame();
 

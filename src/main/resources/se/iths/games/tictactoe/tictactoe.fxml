@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<Pane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.iths.games.tictactoe.TicTacToeController">
+<Pane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.iths.games.tictactoe.Controller">
     <Canvas height="500" width="350" />
    <Label fx:id="headline" alignment="CENTER" contentDisplay="CENTER" layoutX="-2.0" layoutY="1.0" prefHeight="94.0" prefWidth="367.0" text="Tic-Tac-Toe">
       <font>
