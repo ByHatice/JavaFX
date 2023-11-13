@@ -72,8 +72,8 @@ class ModelTest {
     }
     static Stream<Arguments> gameFinishedTestData() {
         return Stream.of(
-                Arguments.of(new String[]{"X", "O", "X", "O", "X", "O", "X", "O", "X"}, "X", true),  // X vinner
-                Arguments.of(new String[]{"O", "X", "O", "X", "O", "X", "O", "X", "O"}, "O", true),  // O vinner
-                Arguments.of(new String[]{"X", "O", "X", "O", "X", "X", "O", "X", "O"}, "Draw", true));  // Oavgjort
+                Arguments.of(new String[]{"X", "O", "X", "O", "X", "O", "X", "O", "X"}, "X", true),
+                Arguments.of(new String[]{"O", "X", "O", "X", "O", "X", "O", "X", "O"}, "O", true),
+                Arguments.of(new String[]{"X", "O", "X", "O", "X", "X", "O", "X", "O"}, "Draw", true));
     }
 }

@@ -30,7 +30,7 @@ public class Model {
     }
     public void playerTurn(boolean isPlayerTurn) {
         this.isPlayerTurn = isPlayerTurn;}
-    public boolean isGameStarted() { //används i botmove
+    public boolean isGameStarted() {
         return gameStarted;
     }
     public ObservableList<StringProperty> getButtonList() {
